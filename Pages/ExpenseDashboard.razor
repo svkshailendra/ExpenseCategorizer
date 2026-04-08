@@ -1,0 +1,106 @@
+﻿@page "/dashboard"
+@using ExpenseCategorizer.Shared
+@inject ExpenseService ExpenseService
+
+<h3>Expense Dashboard</h3>
+
+@if (expenses == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Explanation</th>
+                <th>Date</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expense in expenses)
+            {
+                <tr>
+                    <td>@expense.Description</td>
+                    <td>@expense.Category</td>
+                    <td>@expense.Explanation</td>
+                    <td>@expense.Date.ToString("dd-MMM-yyyy")</td>
+                    <td>@expense.Amount</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" @onclick="() => StartEdit(expense)">Edit</button>
+                        @if (editingExpense != null)
+                        {
+                            <div class="modal show d-block" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content p-3">
+                                        <h5>Edit Expense</h5>
+                                        <div class="mb-2">
+                                            <label>Description</label>
+                                            <input class="form-control" @bind="editingExpense.Description" />
+                                        </div>
+                                        <div class="mb-2">
+                                            <label>Category (read only)</label>
+                                            <input class="form-control" value="@editingExpense.Category" readonly />
+                                        </div>
+                                        <div class="mb-2">
+                                            <label>Amount</label>
+                                            <input class="form-control" type="number" @bind="editingExpense.Amount" />
+                                        </div>
+                                        <div class="mb-2">
+                                            <label>Date</label>
+                                            <input class="form-control" type="date" @bind="editingExpense.Date" />
+                                        </div>
+                                        <button class="btn btn-success" @onclick="SaveEdit">Save</button>
+                                        <button class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteExpense(expense.Id, expense.Category)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Expense> expenses;
+    private Expense editingExpense;
+
+    protected override async Task OnInitializedAsync()
+    {
+        expenses = await ExpenseService.GetExpensesAsync();
+    }
+
+    private void StartEdit(Expense expense)
+    {
+        editingExpense = new Expense
+        {
+            Id = expense.Id,
+            Description = expense.Description,
+            Category = expense.Category,
+            Explanation = expense.Explanation,
+            Date = expense.Date,
+            Amount = expense.Amount
+        };
+    }
+
+    private async Task SaveEdit()
+    {
+        await ExpenseService.UpdateExpenseAsync(editingExpense);
+        expenses = await ExpenseService.GetExpensesAsync(); // refresh
+        editingExpense = null;
+    }
+
+    private void CancelEdit() => editingExpense = null;
+
+    private async Task DeleteExpense(string id, string category)
+    {
+        await ExpenseService.DeleteExpenseAsync(id,category);
+        expenses = await ExpenseService.GetExpensesAsync(); // refresh
+    }
+}

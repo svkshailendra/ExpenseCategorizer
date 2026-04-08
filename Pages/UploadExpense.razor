@@ -1,0 +1,33 @@
+﻿@page "/upload"
+@inject ExpenseService ExpenseService
+
+<h3>Upload Expense</h3>
+
+<InputFile OnChange="HandleFileSelected" />
+
+<button @onclick="UploadFile">Upload</button>
+
+@if (uploadStatus != null)
+{
+    <p>@uploadStatus</p>
+}
+
+@code {
+    private IBrowserFile selectedFile;
+    private string uploadStatus;
+
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+    }
+
+    private async Task UploadFile()
+    {
+        if (selectedFile != null)
+        {
+            uploadStatus = "Uploading...";
+            var result = await ExpenseService.UploadExpense(selectedFile);
+            uploadStatus = result ? "Upload successful!" : "Upload failed.";
+        }
+    }
+}

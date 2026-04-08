@@ -1,0 +1,50 @@
+﻿@page "/report"
+@inject ExpenseService ExpenseService
+
+<h3>Download Monthly Report</h3>
+
+<div class="mb-3">
+    <button class="btn btn-primary me-2" @onclick="PreviewReport" disabled="@isLoading">Preview PDF</button>
+    <button class="btn btn-success" @onclick="DownloadReport" disabled="@isLoading">Download PDF</button>
+</div>
+
+@if (isLoading)
+{
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Generating your report, please wait...</p>
+}
+
+@if (!string.IsNullOrEmpty(statusMessage))
+{
+    <div class="alert @(statusSuccess ? "alert-success" : "alert-danger") mt-2">
+        @statusMessage
+    </div>
+}
+
+@code {
+    private string statusMessage;
+    private bool statusSuccess;
+    private bool isLoading;
+
+    private async Task PreviewReport()
+    {
+        statusMessage = "Generating report preview...";
+        var success = await ExpenseService.PreviewReport();
+        statusSuccess = success;
+        statusMessage = success ? "Report opened in new tab!" : "Failed to preview report.";
+
+        isLoading = false;
+    }
+
+    private async Task DownloadReport()
+    {
+        statusMessage = "Preparing download...";
+        var success = await ExpenseService.DownloadReport();
+        statusSuccess = success;
+        statusMessage = success ? "Report downloaded!" : "Failed to download report.";
+
+        isLoading = false;
+    }
+}
