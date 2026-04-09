@@ -5,6 +5,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <!-- Prevent SDK from auto-generating TargetFrameworkAttribute to avoid duplicate attribute CS0579 -->
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <Platforms>AnyCPU;x64</Platforms>
+    <Configurations>Debug;Release;MixedPlatforms</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

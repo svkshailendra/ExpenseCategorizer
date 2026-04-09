@@ -5,10 +5,14 @@
 		<OutputType>Exe</OutputType>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<Platforms>x64</Platforms>
+		<Configurations>Debug;Release;MixedPlatforms</Configurations>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Azure.AI.OpenAI" Version="2.9.0-beta.1" />
+		<PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="1.0.0" />
 		<PackageReference Include="HttpMultipartParser" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Azure.CognitiveServices.Vision.ComputerVision" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Azure.Cosmos" Version="3.59.0-preview.0" />
@@ -39,5 +43,10 @@
 	<ItemGroup>
 	  <Folder Include="Fonts\" />
 	  <Folder Include="Models\" />
+	</ItemGroup>
+
+	<!-- Prevent duplicate assembly attribute generation from WorkerExtensions auto-generated files under obj -->
+	<ItemGroup>
+	  <Compile Remove="obj\**\WorkerExtensions\**\*.AssemblyInfo.cs" />
 	</ItemGroup>
 </Project>
