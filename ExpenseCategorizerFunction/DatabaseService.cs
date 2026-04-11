@@ -21,8 +21,9 @@ namespace ExpenseCategorizerFunction
         {
             try
             {
-                // Ensure Category is not null if your container partition key is /category
-                await _container.CreateItemAsync(expense, new PartitionKey(expense.Category));
+                //expense.Category = CleanCategory(expense.Category);
+                // Ensure Category is not null if your container partition key is /category                
+                await _container.UpsertItemAsync(expense, new PartitionKey(expense.Category));
             }
             catch (CosmosException ex)
             {

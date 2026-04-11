@@ -49,7 +49,7 @@ public class UploadExpense
         {
             using var reader = new StreamReader(file.Data);
             var json = await reader.ReadToEndAsync();
-            var expenses = System.Text.Json.JsonSerializer.Deserialize<List<Expense>>(json) ?? new List<Expense>();            
+            var expenses = System.Text.Json.JsonSerializer.Deserialize<List<Expense>>(json) ?? new List<Expense>();
 
             foreach (var expense in expenses)
             {
@@ -100,6 +100,8 @@ public class UploadExpense
 
                 // Predict + explain
                 string category = _mlNetService.PredictCategory(description);
+                //category = CleanCategory(category);
+
                 string explanation = await _openAiService.GenerateExplanationAsync(description);
 
                 var expense = new Expense
@@ -121,6 +123,7 @@ public class UploadExpense
             await response.WriteStringAsync(JsonSerializer.Serialize(expensesList));
             return response;
         }
-        
+
     }
+
 }

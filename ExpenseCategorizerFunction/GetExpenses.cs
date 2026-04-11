@@ -37,15 +37,22 @@ namespace ExpenseCategorizerFunction
         public async Task<HttpResponseData> UpdateExpense(
         [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "expenses/{id}/{category}")] HttpRequestData req,string id,string category)
         {
-            var expense = await JsonSerializer.DeserializeAsync<Expense>(req.Body);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var expense = await JsonSerializer.DeserializeAsync<Expense>(req.Body, options);
             expense.Id = id; // ensure ID consistency
             expense.Category = category;
+            //expense.Category = CleanCategory(expense.Category);
             await _dbService.UpdateExpenseAsync(expense);
 
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteStringAsync("Expense updated");
             return response;
         }
+
 
         [Function("DeleteExpense")]
         public async Task<HttpResponseData> DeleteExpense(
