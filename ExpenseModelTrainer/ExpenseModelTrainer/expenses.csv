@@ -1,55 +1,55 @@
-﻿"Description,Category"
-"Starbucks Coffee,Food"
-"Dominos Pizza,Food"
-"Burger King Meal,Food"
-"Subway Sandwich,Food"
-"Grocery Shopping at Walmart,Food"
-"Dinner at Olive Garden,Food"
-"Lunch at McDonalds,Food"
-"KFC Chicken Bucket,Food"
-"Breakfast at IHOP,Food"
-"Snacks from 7-Eleven,Food"
+﻿Description,Category
+Starbucks Coffee,Food
+Dominos Pizza,Food
+Burger King Meal,Food
+Subway Sandwich,Food
+Grocery Shopping at Walmart,Food
+Dinner at Olive Garden,Food
+Lunch at McDonalds,Food
+KFC Chicken Bucket,Food
+Breakfast at IHOP,Food
+Snacks from 7-Eleven,Food
 
-"Uber Ride,Travel"
-"Taxi Fare,Travel"
-"Flight to Delhi,Travel"
-"Train Ticket to Mumbai,Travel"
-"Bus Pass Renewal,Travel"
-"Flight to London,Travel"
-"Metro Card Recharge,Travel"
-"Cab to Airport,Travel"
-"Car Rental Payment,Travel"
-"Toll Charges,Travel"
+Uber Ride,Travel
+Taxi Fare,Travel
+Flight to Delhi,Travel
+Train Ticket to Mumbai,Travel
+Bus Pass Renewal,Travel
+Flight to London,Travel
+Metro Card Recharge,Travel
+Cab to Airport,Travel
+Car Rental Payment,Travel
+Toll Charges,Travel
 
-"Electricity Bill,Utilities"
-"Internet Bill,Utilities"
-"Water Bill,Utilities"
-"Gas Bill,Utilities"
-"Mobile Recharge,Utilities"
-"Cable TV Bill,Utilities"
-"Garbage Collection Fee,Utilities"
-"Home Heating Bill,Utilities"
-"Landline Phone Bill,Utilities"
-"Solar Panel Maintenance,Utilities"
+Electricity Bill,Utilities
+Internet Bill,Utilities
+Water Bill,Utilities
+Gas Bill,Utilities
+Mobile Recharge,Utilities
+Cable TV Bill,Utilities
+Garbage Collection Fee,Utilities
+Home Heating Bill,Utilities
+Landline Phone Bill,Utilities
+Solar Panel Maintenance,Utilities
 
-"Movie Ticket,Entertainment"
-"Netflix Subscription,Entertainment"
-"Concert Ticket,Entertainment"
-"Spotify Subscription,Entertainment"
-"Book Purchase,Entertainment"
-"Amazon Prime Membership,Entertainment"
-"Video Game Purchase,Entertainment"
-"Disney+ Subscription,Entertainment"
-"Theatre Play Ticket,Entertainment"
-"YouTube Premium,Entertainment"
+Movie Ticket,Entertainment
+Netflix Subscription,Entertainment
+Concert Ticket,Entertainment
+Spotify Subscription,Entertainment
+Book Purchase,Entertainment
+Amazon Prime Membership,Entertainment
+Video Game Purchase,Entertainment
+Disney+ Subscription,Entertainment
+Theatre Play Ticket,Entertainment
+YouTube Premium,Entertainment
 
-"Gym Membership,Health"
-"Doctor Consultation Fee,Health"
-"Pharmacy Purchase,Health"
-"Yoga Class,Health"
-"Dental Checkup,Health"
-"Eye Test,Health"
-"Health Insurance Premium,Health"
-"Physiotherapy Session,Health"
-"Protein Supplements,Health"
-"Vaccination Fee,Health"
+Gym Membership,Health
+Doctor Consultation Fee,Health
+Pharmacy Purchase,Health
+Yoga Class,Health
+Dental Checkup,Health
+Eye Test,Health
+Health Insurance Premium,Health
+Physiotherapy Session,Health
+Protein Supplements,Health
+Vaccination Fee,Health
