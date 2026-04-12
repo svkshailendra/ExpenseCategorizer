@@ -2,6 +2,8 @@
 @using ExpenseCategorizer.Shared
 @inject ExpenseService ExpenseService
 
+<Toast Message="@toastMessage" />
+
 <h3>Expense Dashboard</h3>
 
 @if (expenses == null)
@@ -18,6 +20,7 @@ else
                 <th>Explanation</th>
                 <th>Date</th>
                 <th>Amount</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -31,34 +34,6 @@ else
                     <td>@expense.Amount</td>
                     <td>
                         <button class="btn btn-sm btn-primary" @onclick="() => StartEdit(expense)">Edit</button>
-                        @if (editingExpense != null)
-                        {
-                            <div class="modal show d-block" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content p-3">
-                                        <h5>Edit Expense</h5>
-                                        <div class="mb-2">
-                                            <label>Description</label>
-                                            <input class="form-control" @bind="editingExpense.Description" />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label>Category (read only)</label>
-                                            <input class="form-control" value="@editingExpense.Category" readonly />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label>Amount</label>
-                                            <input class="form-control" type="number" @bind="editingExpense.Amount" />
-                                        </div>
-                                        <div class="mb-2">
-                                            <label>Date</label>
-                                            <input class="form-control" type="date" @bind="editingExpense.Date" />
-                                        </div>
-                                        <button class="btn btn-success" @onclick="SaveEdit">Save</button>
-                                        <button class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        }
                         <button class="btn btn-sm btn-danger" @onclick="() => DeleteExpense(expense.Id, expense.Category)">Delete</button>
                     </td>
                 </tr>
@@ -67,9 +42,51 @@ else
     </table>
 }
 
+@if (editingExpense != null)
+{
+    <div class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-3">
+                <h5>Edit Expense</h5>
+                <div class="mb-2">
+                    <label>Description</label>
+                    <InputText class="form-control" @bind-Value="editingExpense.Description" />
+                </div>
+                <div class="mb-2">
+                    <label>Category (read only)</label>
+                    <input class="form-control" value="@editingExpense.Category" readonly />
+                </div>
+                <div class="mb-2">
+                    <label>Explanation</label>
+                    <InputText class="form-control" @bind-Value="editingExpense.Explanation" />
+                </div>
+                <div class="mb-2">
+                    <label>Amount</label>
+                    <InputNumber class="form-control" @bind-Value="editingExpense.Amount" />
+                </div>
+                <div class="mb-2">
+                    <label>Date</label>
+                    <InputDate class="form-control" @bind-Value="editingExpense.Date" />
+                </div>
+                <button class="btn btn-success" @onclick="SaveEdit">Save</button>
+                <button class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (isLoading)
+{
+    <div class="spinner-border text-primary position-fixed bottom-0 end-0 m-3" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+
 @code {
     private List<Expense> expenses;
     private Expense editingExpense;
+    private string toastMessage;
+    private bool isLoading = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,6 +95,7 @@ else
 
     private void StartEdit(Expense expense)
     {
+        // Create a copy so edits don’t immediately affect the table until saved
         editingExpense = new Expense
         {
             Id = expense.Id,
@@ -91,16 +109,39 @@ else
 
     private async Task SaveEdit()
     {
+        isLoading = true;
+        StateHasChanged();
+
         await ExpenseService.UpdateExpenseAsync(editingExpense);
         expenses = await ExpenseService.GetExpensesAsync(); // refresh
         editingExpense = null;
+
+        isLoading = false;
+        // Show toast
+        ShowToast("Expense updated successfully!");
+        StateHasChanged(); 
     }
 
     private void CancelEdit() => editingExpense = null;
 
     private async Task DeleteExpense(string id, string category)
     {
-        await ExpenseService.DeleteExpenseAsync(id,category);
+        isLoading = true;
+        StateHasChanged();
+
+        await ExpenseService.DeleteExpenseAsync(id, category);
         expenses = await ExpenseService.GetExpensesAsync(); // refresh
+
+        isLoading = false;
+        // Show toast
+        ShowToast("Expense deleted successfully!");        
+    }
+    private async void ShowToast(string message)
+    {
+        toastMessage = message;
+        StateHasChanged();
+        await Task.Delay(3000);
+        toastMessage = string.Empty;
+        StateHasChanged();
     }
 }

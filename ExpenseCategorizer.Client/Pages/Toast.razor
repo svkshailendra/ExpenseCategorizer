@@ -1,0 +1,16 @@
+﻿ 
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    @if (!string.IsNullOrEmpty(Message))
+    {
+        <div class="toast show bg-success text-white">
+            <div class="toast-body">
+                @Message
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Message { get; set; }
+}
+ 
