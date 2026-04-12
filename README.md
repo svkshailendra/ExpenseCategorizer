@@ -62,14 +62,13 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
    ```bash
    git clone https://github.com/svkshailendra/ExpenseCategorizer.git
 
-📸 Screenshots
+## 📸 Screenshots
 ![Home Page](docs/Home.png)  
 ![Upload Page](docs/upload.png)
 ![Dashboard](docs/dashboard.png)
 ![Report Page](docs/report.png)
 
-
-⚙️ Setup
+## ⚙️ Setup
 1. Install .NET 8 SDK and Azure Functions Core Tools.
 2. Clone the repo:
    git clone https://github.com/svkshailendra/ExpenseCategorizer.git
@@ -79,7 +78,21 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
 5. Run the Functions backend:
    func start
 
-🗺️ Roadmap
+## 🗺️ Architecture Overview
+
+The system is composed of:
+
+- **Blazor WebAssembly** frontend for UI.
+- **Azure Functions** backend APIs (Upload, Get, Update, Delete).
+- **OCR Service** (Azure Cognitive Services) for non‑JSON uploads.
+- **ML.NET** for automated categorization.
+- **Azure OpenAI** for generating explanations.
+- **Cosmos DB** for scalable storage, partitioned by category.
+- **Dashboard** for human‑in‑the‑loop correction and reporting.
+![Architecture](docs/architecture.png)
+
+
+## 🗺️ Roadmap
 - Add charts for category totals and monthly trends.
 - Multi-user authentication with Azure AD B2C.
 - Export reports to CSV/Excel.
