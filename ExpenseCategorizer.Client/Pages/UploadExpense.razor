@@ -12,6 +12,37 @@
     <p>@uploadStatus</p>
 }
 
+<!-- Info card for JSON format -->
+<div class="card mt-3">
+    <div class="card-header">
+        Supported Upload Formats
+    </div>
+    <div class="card-body">
+        <h6>1. JSON (direct upload)</h6>
+        <pre>
+            {
+            "description": "Lunch with client",
+            "category": "Food",
+            "explanation": "Client meeting meal",
+            "date": "2026-03-05",
+            "amount": 55.5
+            }
+        </pre>
+        <p class="text-muted">
+            Developers can upload structured JSON directly in this format.
+        </p>
+
+        <h6>2. Other formats (OCR/ML pipeline)</h6>
+        <p>
+            You can also upload receipts, PDFs, or images.
+            These will be processed automatically using OCR and machine learning,
+            then converted into the same JSON structure shown above.
+            If changes are needed, you can edit them in the GetExpenses page or delete them accordingly.
+        </p>
+    </div>
+</div>
+
+
 @code {
     private IBrowserFile selectedFile;
     private string uploadStatus;

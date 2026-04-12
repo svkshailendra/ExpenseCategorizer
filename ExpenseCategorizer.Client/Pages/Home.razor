@@ -1,7 +1,40 @@
 ﻿@page "/"
+<h3>Welcome to ExpenseCategorizer</h3>
 
-<PageTitle>Home</PageTitle>
+<p class="text-muted">
+    Track, categorize, and report your expenses with ease.
+    Here’s how to get started:
+</p>
 
-<h1>Hello, world!</h1>
+<div class="card mt-3">
+    <div class="card-body">
+        <h5>1. Upload Expense</h5>
+        <p>
+            Upload receipts, PDFs, images, or JSON files.
+            Our OCR + ML pipeline extracts details and converts them into structured expenses.
+        </p>
+        <a class="btn btn-outline-primary btn-sm" href="/upload">Go to Upload</a>
+    </div>
+</div>
 
-Welcome to your new app.
+<div class="card mt-3">
+    <div class="card-body">
+        <h5>2. Get All Expenses</h5>
+        <p>
+            View your expense dashboard with categories, explanations, dates, and amounts.
+            Edit or delete entries directly from the table.
+        </p>
+        <a class="btn btn-outline-primary btn-sm" href="/dashboard">View Expenses</a>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5>3. Download Monthly Report</h5>
+        <p>
+            Generate a PDF report of your expenses for the month.
+            Perfect for bookkeeping or sharing with clients.
+        </p>
+        <a class="btn btn-outline-primary btn-sm" href="/report">Download Report</a>
+    </div>
+</div>

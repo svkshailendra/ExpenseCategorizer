@@ -61,3 +61,27 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
 1. Clone the repo:
    ```bash
    git clone https://github.com/svkshailendra/ExpenseCategorizer.git
+
+📸 Screenshots
+![Home Page](docs/Home.png)  
+![Upload Page](docs/upload.png)
+![Dashboard](docs/dashboard.png)
+![Report Page](docs/report.png)
+
+
+⚙️ Setup
+1. Install .NET 8 SDK and Azure Functions Core Tools.
+2. Clone the repo:
+   git clone https://github.com/svkshailendra/ExpenseCategorizer.git
+3. Configure Cosmos DB connection string in local.settings.json.
+4. Run the Blazor client:
+   dotnet run --project ExpenseCategorizer.Client
+5. Run the Functions backend:
+   func start
+
+🗺️ Roadmap
+- Add charts for category totals and monthly trends.
+- Multi-user authentication with Azure AD B2C.
+- Export reports to CSV/Excel.
+- Enhanced error handling with toast notifications.
+
