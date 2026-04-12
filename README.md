@@ -89,7 +89,8 @@ The system is composed of:
 - **Azure OpenAI** for generating explanations.
 - **Cosmos DB** for scalable storage, partitioned by category.
 - **Dashboard** for human‑in‑the‑loop correction and reporting.
-![Architecture](docs/architecture.png)
+
+![Architecture](docs/Architecture.png)
 
 
 ## 🗺️ Roadmap
