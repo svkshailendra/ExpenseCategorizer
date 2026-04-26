@@ -1,6 +1,9 @@
 ﻿@page "/report"
 @inject ExpenseService ExpenseService
 
+
+<AuthorizeView> 
+    <Authorized> 
 <h3>Download Monthly Report</h3>
 
 <div class="mb-3">
@@ -22,6 +25,12 @@
         @statusMessage
     </div>
 }
+
+    </Authorized>
+    <NotAuthorized>
+        <p class="text-muted">Please login to generate and download your report.</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private string statusMessage;

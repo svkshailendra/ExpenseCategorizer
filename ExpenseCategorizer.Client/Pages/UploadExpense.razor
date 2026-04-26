@@ -1,6 +1,8 @@
 ﻿@page "/upload"
 @inject ExpenseService ExpenseService
 
+<AuthorizeView> 
+    <Authorized> 
 <h3>Upload Expense</h3>
 
 <InputFile OnChange="HandleFileSelected" />
@@ -41,7 +43,11 @@
         </p>
     </div>
 </div>
-
+</Authorized>
+    <NotAuthorized> 
+        <p class="text-muted">Please login to upload expenses.</p>
+    </NotAuthorized>
+</AuthorizeView> 
 
 @code {
     private IBrowserFile selectedFile;

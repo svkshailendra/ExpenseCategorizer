@@ -2,6 +2,8 @@
 @using ExpenseCategorizer.Shared
 @inject ExpenseService ExpenseService
 
+<AuthorizeView> 
+    <Authorized> 
 <Toast Message="@toastMessage" />
 
 <h3>Expense Dashboard</h3>
@@ -74,6 +76,12 @@ else
         </div>
     </div>
 }
+</Authorized> 
+    <NotAuthorized> 
+        <p class="text-muted">Please login to view your expenses.</p>
+    </NotAuthorized> 
+</AuthorizeView>  
+
 
 @if (isLoading)
 {
@@ -103,7 +111,8 @@ else
             Category = expense.Category,
             Explanation = expense.Explanation,
             Date = expense.Date,
-            Amount = expense.Amount
+            Amount = expense.Amount,
+            UserId = expense.UserId
         };
     }
 
@@ -129,7 +138,7 @@ else
         isLoading = true;
         StateHasChanged();
 
-        await ExpenseService.DeleteExpenseAsync(id, category);
+        await ExpenseService.DeleteExpenseAsync(id);
         expenses = await ExpenseService.GetExpensesAsync(); // refresh
 
         isLoading = false;

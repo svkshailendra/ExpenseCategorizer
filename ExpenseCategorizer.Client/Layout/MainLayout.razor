@@ -1,4 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -6,6 +10,16 @@
 
     <main>
         <div class="top-row px-4">
+            <AuthorizeView>
+                <Authorized>
+                    Hello, @(context.User?.Identity?.Name ?? "User")!
+                    <button class="btn btn-link" @onclick="Logout">Logout</button>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="authentication/login">Login</a>
+                </NotAuthorized>
+            </AuthorizeView>
+
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
@@ -14,3 +28,12 @@
         </article>
     </main>
 </div>
+
+@code {
+    private async Task Logout()
+    {
+        await SignOutManager.SetSignOutState();
+        // Navigate through Blazor/MSAL pipeline so logout is recognized as "in-page"
+        Navigation.NavigateTo("authentication/logout");
+    }
+}

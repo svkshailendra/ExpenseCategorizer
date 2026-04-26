@@ -1,7 +1,9 @@
 ﻿using ExpenseCategorizer.Shared;
 using ExpenseCategorizerFunction;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.JSInterop;
+using Microsoft.Rest;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -11,11 +13,24 @@ public class ExpenseService
 {
     private readonly HttpClient _http;
     private readonly IJSRuntime _js;
+    private readonly IAccessTokenProvider _tokenProvider;
 
-    public ExpenseService(HttpClient http, IJSRuntime js)
+    public ExpenseService(HttpClient http, IJSRuntime js, IAccessTokenProvider tokenProvider)
     {
         _http = http;
-        _js = js;
+        _js = js;         
+        _tokenProvider = tokenProvider;
+    }
+
+    // Helper: attach token before each request
+    private async Task AttachTokenAsync()
+    {
+        var tokenResult = await _tokenProvider.RequestAccessToken();
+        if (tokenResult.TryGetToken(out var token))
+        {
+            _http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token.Value);
+        }
     }
 
     public async Task<bool> UploadExpense(IBrowserFile file)
@@ -52,6 +67,8 @@ public class ExpenseService
     {
         try
         {
+            await AttachTokenAsync();
+
             var result = await _http.GetFromJsonAsync<List<Expense>>("expenses");
             return result ?? new List<Expense>();
         }
@@ -64,12 +81,12 @@ public class ExpenseService
 
     public async Task UpdateExpenseAsync(Expense expense)
     {
-        await _http.PutAsJsonAsync($"expenses/{expense.Id}/{expense.Category}", expense);
+        await _http.PutAsJsonAsync($"expenses/{expense.Id}", expense);
     }
 
-    public async Task DeleteExpenseAsync(string id, string category)
+    public async Task DeleteExpenseAsync(string id)
     {
-        await _http.DeleteAsync($"expenses/{id}/{category}");
+        await _http.DeleteAsync($"expenses/{id}");
     }
 
 
