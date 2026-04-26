@@ -12,9 +12,9 @@ namespace ExpenseCategorizerFunction
             _dbService = dbService;
         }
 
-        public async Task<Report> GenerateReportAsync()
+        public async Task<Report> GenerateReportAsync(string userid)
         {
-            var expenses = await _dbService.GetAllExpensesAsync();
+            var expenses = await _dbService.GetAllExpensesByUserAsync(userid);
 
             var total = expenses.Sum(e => e.Amount);
             var categories = expenses

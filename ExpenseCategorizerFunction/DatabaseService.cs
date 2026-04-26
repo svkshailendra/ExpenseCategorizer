@@ -1,5 +1,6 @@
 ﻿using ExpenseCategorizer.Shared;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos.Linq;
 
 namespace ExpenseCategorizerFunction
 {
@@ -17,13 +18,15 @@ namespace ExpenseCategorizerFunction
             var client = new CosmosClient(connectionString);
             _container = client.GetContainer(databaseName, containerName);
         }
-        public async Task SaveExpenseAsync(Expense expense)
+        public async Task SaveExpenseAsync(Expense expense, string userId)
         {
             try
             {
                 //expense.Category = CleanCategory(expense.Category);
-                // Ensure Category is not null if your container partition key is /category                
-                await _container.UpsertItemAsync(expense, new PartitionKey(expense.Category));
+                // Ensure Category is not null if your container partition key is /category
+                expense.UserId = userId;
+                //await _container.UpsertItemAsync(expense, new PartitionKey(expense.Category));
+                await _container.UpsertItemAsync(expense, new PartitionKey(expense.UserId));
             }
             catch (CosmosException ex)
             {
@@ -47,14 +50,46 @@ namespace ExpenseCategorizerFunction
             return results;
         }
 
-        public async Task UpdateExpenseAsync(Expense expense)
+        public async Task<List<Expense>> GetAllExpensesByUserAsync(string userId)
         {
-            await _container.UpsertItemAsync(expense, new PartitionKey(expense.Category));
+            var query = _container.GetItemQueryIterator<Expense>(
+                new QueryDefinition("SELECT * FROM c WHERE c.userId = @userId")
+                    .WithParameter("@userId", userId));
+
+            var results = new List<Expense>();
+
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+                results.AddRange(response);
+            }
+
+            return results;
+        }
+        public async Task<List<Expense>> GetExpensesByUserAsync(string userId)
+        {
+            var query = _container.GetItemLinqQueryable<Expense>(true)
+                                  .Where(e => e.UserId == userId)
+                                  .ToFeedIterator();
+
+            var results = new List<Expense>();
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+                results.AddRange(response);
+            }
+            return results;
         }
 
-        public async Task DeleteExpenseAsync(string id,string category)
+        public async Task UpdateExpenseAsync(Expense expense, string userId)
         {
-            await _container.DeleteItemAsync<Expense>(id, new PartitionKey(category));
+            expense.UserId = userId;
+            await _container.UpsertItemAsync(expense, new PartitionKey(expense.UserId));
+        }
+
+        public async Task DeleteExpenseAsync(string id,string userId)
+        {
+            await _container.DeleteItemAsync<Expense>(id, new PartitionKey(userId));
         }
 
         public async Task<List<Expense>> GetMonthlyExpensesAsync(int month)

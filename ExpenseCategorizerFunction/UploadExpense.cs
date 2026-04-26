@@ -1,10 +1,16 @@
 using ExpenseCategorizer.Shared;
 using HttpMultipartParser;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Net;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using static ExpenseCategorizerFunction.Services.IExpenseServices;
@@ -29,21 +35,51 @@ public class UploadExpense
         _dbService = dbService;
     }
 
+    [Authorize]
     [Function("UploadExpense")]
-    public async Task<HttpResponseData> Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "upload")] HttpRequestData req)
+    public async Task<IActionResult> Run(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "upload")] HttpRequest req)
     {
         _logger.LogInformation("UploadExpense triggered.");
+
+        // Extract user ID from token
+        //var userId = req.HttpContext.User.FindFirst("oid")?.Value ?? req.HttpContext.User.FindFirst("sub")?.Value ?? req.HttpContext.User.FindFirst("preferred_username")?.Value;
+
+        // Trigger authentication manually
+        var result = await req.HttpContext.AuthenticateAsync();
+        if (!result.Succeeded)
+        {
+            _logger.LogError($"Auth failed: {result.Failure?.Message}");
+            return new UnauthorizedResult();
+        }
+
+        foreach (var claim in result.Principal.Claims)
+        {
+            _logger.LogInformation($"Claim: {claim.Type} = {claim.Value}");
+        }
+        // Extract user ID from claims
+        var userId = await AuthHelper.GetUserIdAsync(req);
+        _logger.LogInformation($"Extracted UserId = {userId ?? "NULL"}");
+        //if (string.IsNullOrEmpty(userId))
+        //{
+        //    var unauthorized = req.CreateResponse(HttpStatusCode.Unauthorized);
+        //    await unauthorized.WriteStringAsync("User not authenticated");
+        //    return unauthorized;
+        //}
+        if (string.IsNullOrEmpty(userId))
+            return new UnauthorizedResult();
 
         var parser = await MultipartFormDataParser.ParseAsync(req.Body);
         var file = parser.Files.FirstOrDefault();
 
+        //if (file == null)
+        //{
+        //    var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+        //    await badResponse.WriteStringAsync("No file uploaded");
+        //    return badResponse;
+        //}
         if (file == null)
-        {
-            var badResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-            await badResponse.WriteStringAsync("No file uploaded");
-            return badResponse;
-        }
+            return new BadRequestObjectResult("No file uploaded");
 
         if (file.ContentType == "application/json")
         {
@@ -55,12 +91,15 @@ public class UploadExpense
             {
                 if (string.IsNullOrEmpty(expense.Id))
                     expense.Id = Guid.NewGuid().ToString();
-                await _dbService.SaveExpenseAsync(expense);
+                // Attach user ID
+                expense.UserId = userId;
+                await _dbService.SaveExpenseAsync(expense, userId);
             }
 
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            await response.WriteStringAsync(System.Text.Json.JsonSerializer.Serialize(expenses));
-            return response;
+            //var response = req.CreateResponse(HttpStatusCode.OK);
+            //await response.WriteStringAsync(System.Text.Json.JsonSerializer.Serialize(expenses));
+            //return response;
+            return new OkObjectResult(expenses);
         }
         else
         {
@@ -111,17 +150,20 @@ public class UploadExpense
                     Category = category,
                     Explanation = explanation,
                     Date = expenseDate,
-                    Amount = amount
+                    Amount = amount,
+                    UserId = userId
                 };
 
-                await _dbService.SaveExpenseAsync(expense);
+                await _dbService.SaveExpenseAsync(expense, userId);
                 expensesList.Add(expense);
             }
 
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "application/json");
-            await response.WriteStringAsync(JsonSerializer.Serialize(expensesList));
-            return response;
+            //var response = req.CreateResponse(HttpStatusCode.OK);
+            //response.Headers.Add("Content-Type", "application/json");
+            //await response.WriteStringAsync(JsonSerializer.Serialize(expensesList));
+            //return response;
+
+            return new OkObjectResult(expensesList);
         }
 
     }
