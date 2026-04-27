@@ -48,10 +48,7 @@ public class ExpenseService
 
             // Optionally deserialize the returned Expense object
             var json = await response.Content.ReadAsStringAsync();
-            var expenses = JsonSerializer.Deserialize<List<Expense>>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            var expenses = JsonSerializer.Deserialize<List<Expense>>(json, JsonHelper.SafeOptions);
 
             // You could store or return this expense if needed
             return expenses != null && expenses.Count > 0;

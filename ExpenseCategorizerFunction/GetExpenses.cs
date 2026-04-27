@@ -85,10 +85,10 @@ namespace ExpenseCategorizerFunction
         public async Task<IActionResult> UpdateExpense(
         [HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "expenses/{id}")] HttpRequest req,string id)
         {
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
+            //var options = new JsonSerializerOptions
+            //{
+            //    PropertyNameCaseInsensitive = true
+            //};
 
             // Authenticate
             var result = await req.HttpContext.AuthenticateAsync();
@@ -100,7 +100,7 @@ namespace ExpenseCategorizerFunction
             if (string.IsNullOrEmpty(userId))
                 return new UnauthorizedResult();
 
-            var expense = await JsonSerializer.DeserializeAsync<Expense>(req.Body, options);
+            var expense = await JsonSerializer.DeserializeAsync<Expense>(req.Body, JsonHelper.SafeOptions);
             expense.Id = id; // ensure ID consistency 
             expense.UserId = userId; // enforce partition key
             await _dbService.UpdateExpenseAsync(expense, userId);
