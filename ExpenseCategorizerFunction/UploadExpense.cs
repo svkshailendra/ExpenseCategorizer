@@ -103,69 +103,167 @@ public class UploadExpense
         }
         else
         {
-            // Otherwise, use OCR + ML + OpenAI pipeline
-            string extractedText = await _ocrService.ExtractTextAsync(file.Data);
+            //// Otherwise, use OCR + ML + OpenAI pipeline
+            //string extractedText = await _ocrService.ExtractTextAsync(file.Data);
 
-            // Split OCR output into lines (handles \n or \r\n)
-            var lines = extractedText
-                .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(l => l.Trim())
-                .Where(l => !string.IsNullOrWhiteSpace(l))
-                .ToList();
+            //// Split OCR output into lines (handles \n or \r\n)
+            //var lines = extractedText
+            //    .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+            //    .Select(l => l.Trim())
+            //    .Where(l => !string.IsNullOrWhiteSpace(l))
+            //    .ToList();
 
-            var expensesList = new List<Expense>();
+            //var expensesList = new List<Expense>();
 
-            foreach (var line in lines)
+            //foreach (var line in lines)
+            //{
+            //    // Skip obvious metadata
+            //    var skipKeywords = new[] { "Invoice", "Date:", "Invoice No:", "Items:", "Total:" };
+            //    if (skipKeywords.Any(k => line.StartsWith(k, StringComparison.OrdinalIgnoreCase)))
+            //        continue;
+
+            //    // Extract amount (default 0 if not found)
+            //    var amountMatch = Regex.Match(line, @"(\p{Sc}?\s*\d+(\.\d{1,2})?)$");
+            //    int amount = amountMatch.Success ? int.Parse(Regex.Replace(amountMatch.Value, @"[^\d]", "")) : 0;
+
+            //    // Extract date (fallback to current)
+            //    var dateMatch = Regex.Match(line, @"(\d{2}-[A-Za-z]{3}-\d{4}|\d{2}/\d{2}/\d{4}|\d{4}-\d{2}-\d{2})");
+            //    DateTime expenseDate = dateMatch.Success
+            //        ? DateTime.Parse(dateMatch.Value, CultureInfo.InvariantCulture)
+            //        : DateTime.UtcNow;
+
+            //    // Clean description
+            //    string description = line;
+            //    if (amountMatch.Success) description = description.Replace(amountMatch.Value, "").Trim();
+            //    if (dateMatch.Success) description = description.Replace(dateMatch.Value, "").Trim();
+
+            //    // Predict + explain
+            //    string category = _mlNetService.PredictCategory(description);
+            //    //category = CleanCategory(category);
+
+            //    string explanation = await _openAiService.GenerateExplanationAsync(description);
+
+            //    var expense = new Expense
+            //    {
+            //        Id = Guid.NewGuid().ToString(),
+            //        Description = description,
+            //        Category = category,
+            //        Explanation = explanation,
+            //        Date = expenseDate,
+            //        Amount = amount,
+            //        UserId = userId
+            //    };
+
+            //    await _dbService.SaveExpenseAsync(expense, userId);
+            //    expensesList.Add(expense);
+            //}
+
+            ////var response = req.CreateResponse(HttpStatusCode.OK);
+            ////response.Headers.Add("Content-Type", "application/json");
+            ////await response.WriteStringAsync(JsonSerializer.Serialize(expensesList));
+            ////return response;
+
+            //return new OkObjectResult(expensesList);
+            string text;
+
+            if (file.ContentType == "text/plain")
             {
-                // Skip obvious metadata
-                var skipKeywords = new[] { "Invoice", "Date:", "Invoice No:", "Items:", "Total:" };
-                if (skipKeywords.Any(k => line.StartsWith(k, StringComparison.OrdinalIgnoreCase)))
-                    continue;
-
-                // Extract amount (default 0 if not found)
-                var amountMatch = Regex.Match(line, @"(\p{Sc}?\s*\d+(\.\d{1,2})?)$");
-                int amount = amountMatch.Success ? int.Parse(Regex.Replace(amountMatch.Value, @"[^\d]", "")) : 0;
-
-                // Extract date (fallback to current)
-                var dateMatch = Regex.Match(line, @"(\d{2}-[A-Za-z]{3}-\d{4}|\d{2}/\d{2}/\d{4}|\d{4}-\d{2}-\d{2})");
-                DateTime expenseDate = dateMatch.Success
-                    ? DateTime.Parse(dateMatch.Value, CultureInfo.InvariantCulture)
-                    : DateTime.UtcNow;
-
-                // Clean description
-                string description = line;
-                if (amountMatch.Success) description = description.Replace(amountMatch.Value, "").Trim();
-                if (dateMatch.Success) description = description.Replace(dateMatch.Value, "").Trim();
-
-                // Predict + explain
-                string category = _mlNetService.PredictCategory(description);
-                //category = CleanCategory(category);
-
-                string explanation = await _openAiService.GenerateExplanationAsync(description);
-
-                var expense = new Expense
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Description = description,
-                    Category = category,
-                    Explanation = explanation,
-                    Date = expenseDate,
-                    Amount = amount,
-                    UserId = userId
-                };
-
-                await _dbService.SaveExpenseAsync(expense, userId);
-                expensesList.Add(expense);
+                using var reader = new StreamReader(file.Data);
+                text = await reader.ReadToEndAsync();
+            }
+            else
+            {
+                // OCR for images/PDFs
+                text = await _ocrService.ExtractTextAsync(file.Data);
             }
 
-            //var response = req.CreateResponse(HttpStatusCode.OK);
-            //response.Headers.Add("Content-Type", "application/json");
-            //await response.WriteStringAsync(JsonSerializer.Serialize(expensesList));
-            //return response;
-
+            var expensesList = await ParseTextAsync(text, userId);
             return new OkObjectResult(expensesList);
         }
 
     }
 
+
+    // Shared parser for TXT and OCR
+    private async Task<List<Expense>> ParseTextAsync(string text, string userId)
+    {
+        var lines = text
+            .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(l => l.Trim())
+            .Where(l => !string.IsNullOrWhiteSpace(l))
+            .ToList();
+
+        var expensesList = new List<Expense>();
+
+        foreach (var line in lines)
+        {
+            var skipKeywords = new[] { "Invoice", "Date:", "Invoice No:", "Items:", "Total:" , "Subtotal", "Taxes", "Total", "Invoice Total" };
+            if (skipKeywords.Any(k => line.StartsWith(k, StringComparison.OrdinalIgnoreCase)))
+                continue;
+
+            //var amountMatch = Regex.Match(line, @"(\p{Sc}?\s*\d+(\.\d{1,2})?)$");
+            //int amount = amountMatch.Success ? int.Parse(Regex.Replace(amountMatch.Value, @"[^\d]", "")) : 0;
+
+            // Extract amount safely as decimal
+            //var amountMatch = Regex.Match(line, @"(\p{Sc}?\s*\d+(\.\d{1,2})?)$");
+            //decimal amount = 0;
+            //if (amountMatch.Success)
+            //{
+            //    var cleaned = Regex.Replace(amountMatch.Value, @"[^\d.]", "");
+            //    decimal.TryParse(cleaned, NumberStyles.Any, CultureInfo.InvariantCulture, out amount);
+            //}
+
+            // Use helper to extract amount
+            decimal amount = ExtractAmount(line);
+
+            var dateMatch = Regex.Match(line, @"(\d{2}-[A-Za-z]{3}-\d{4}|\d{2}/\d{2}/\d{4}|\d{4}-\d{2}-\d{2})");
+            DateTime expenseDate = dateMatch.Success
+                ? DateTime.Parse(dateMatch.Value, CultureInfo.InvariantCulture)
+                : DateTime.UtcNow;
+
+            //clean Description
+            string description = line;
+            //if (amountMatch.Success) description = description.Replace(amountMatch.Value, "").Trim();
+            if (dateMatch.Success) description = description.Replace(dateMatch.Value, "").Trim();
+
+            // Skip if description is empty after cleaning
+            if (string.IsNullOrWhiteSpace(description))
+                continue;
+
+            //Predict + Explain
+            string category = _mlNetService.PredictCategory(description);
+            string explanation = await _openAiService.GenerateExplanationAsync(description);
+
+            var expense = new Expense
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = description,
+                Category = category,
+                Explanation = explanation,
+                Date = expenseDate,
+                Amount = amount,
+                UserId = userId
+            };
+
+            await _dbService.SaveExpenseAsync(expense, userId);
+            expensesList.Add(expense);
+        }
+
+        return expensesList;
+    }
+
+    // Helper: extract last numeric value safely
+    private decimal ExtractAmount(string line)
+    {
+        var matches = Regex.Matches(line, @"\d+(\.\d{1,2})?");
+        if (matches.Count == 0) return 0;
+
+        var lastMatch = matches[matches.Count - 1].Value;
+        if (decimal.TryParse(lastMatch, NumberStyles.Any, CultureInfo.InvariantCulture, out var amount))
+        {
+            if (amount > 0 && amount < 1000000) // guard against IDs
+                return amount;
+        }
+        return 0;
+    }
 }
