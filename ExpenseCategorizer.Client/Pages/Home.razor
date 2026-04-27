@@ -2,16 +2,20 @@
 <h3>Welcome to ExpenseCategorizer</h3>
 
 <p class="text-muted">
+    AI‑powered categorization with human correction built‑in.
     Track, categorize, and report your expenses with ease.
     Here’s how to get started:
 </p>
 
 <div class="card mt-3">
     <div class="card-body">
-        <h5>1. Upload Expense</h5>
+        <h5>
+            <img src="images/upload.png" alt="Upload Icon" style="height:50px; margin-right:8px; vertical-align:middle; margin-bottom: 6px" />
+            1. Upload Expense</h5>
         <p>
             Upload receipts, PDFs, images, or JSON files.
-            Our OCR + ML pipeline extracts details and converts them into structured expenses.
+            OCR extracts text, rule‑based parsing captures amounts, and ML.NET predicts categories with explanations from Azure OpenAI.
+            Optimized for handwritten receipts; complex invoices may need correction.
         </p>
         <a class="btn btn-outline-primary btn-sm" href="/upload">Go to Upload</a>
     </div>
@@ -19,9 +23,12 @@
 
 <div class="card mt-3">
     <div class="card-body">
-        <h5>2. Get All Expenses</h5>
+        <h5>
+            <img src="images/dashboard.png" alt="Dashboard Icon" style="height:50px; margin-right:8px; vertical-align:middle; margin-bottom: 6px" />
+            2. Get All Expenses</h5>
         <p>
             View your expense dashboard with categories, explanations, dates, and amounts.
+            Rows with Amount = 0 are flagged for correction, ensuring data integrity even when OCR parsing is imperfect.
             Edit or delete entries directly from the table.
         </p>
         <a class="btn btn-outline-primary btn-sm" href="/dashboard">View Expenses</a>
@@ -30,7 +37,9 @@
 
 <div class="card mt-3">
     <div class="card-body">
-        <h5>3. Download Monthly Report</h5>
+        <h5>
+            <img src="images/report.png" alt="Report Icon" style="height:50px; margin-right:8px; vertical-align:middle; margin-bottom: 6px" />
+            3. Download Monthly Report</h5>
         <p>
             Generate a PDF report of your expenses for the month.
             Perfect for bookkeeping or sharing with clients.

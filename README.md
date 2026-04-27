@@ -15,6 +15,7 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
 - **Automated Categorization**
   - ML.NET predicts expense categories (Food, Travel, Utilities, Entertainment, etc.).
   - Azure OpenAI generates human-readable explanations for each categorization.
+  - Amounts are parsed with rule‑based heuristics (regex + cleaning). ML is used only for category prediction. 
 
 - **Human-in-the-Loop Correction**
   - Inline **Edit/Delete** buttons in the dashboard.
@@ -24,16 +25,17 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
 - **Cloud-Native Architecture**
   - Blazor WebAssembly frontend.
   - Azure Functions backend APIs (`UploadExpense`, `GetExpenses`, `UpdateExpense`, `DeleteExpense`).
-  - Cosmos DB for scalable storage.
+  - Cosmos DB for scalable storage, partitioned by userid for multi tenant isolation.
 
 ---
 
 ## 📷 Demo Flow
 
 1. Upload a **JSON file** → clean entries saved.
-2. Upload a **PDF receipt** → OCR extracts items, categories predicted.
-3. Dashboard shows all expenses → edit/delete available.
-4. Rows with missing amounts (`0`) are flagged → user corrects them.
+2. Upload a **handwritten receipt** → OCR extracts items, categories predicted, amounts parsed reliably.
+3. Upload a **PDF receipt** → OCR extracts items, categories predicted.
+4. Dashboard shows all expenses → edit/delete available.
+5. Rows with missing amounts (`0`) are flagged → user corrects them.
 
 ---
 
@@ -61,13 +63,7 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
 1. Clone the repo:
    ```bash
    git clone https://github.com/svkshailendra/ExpenseCategorizer.git
-
-## 📸 Screenshots
-![Home Page](docs/Home.png)  
-![Upload Page](docs/upload.png)
-![Dashboard](docs/dashboard.png)
-![Report Page](docs/report.png)
-
+	
 ## ⚙️ Setup
 1. Install .NET 8 SDK and Azure Functions Core Tools.
 2. Clone the repo:
@@ -78,6 +74,13 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
 5. Run the Functions backend:
    func start
 
+## 📸 Screenshots
+![Home Page](docs/Home.png)  
+![Upload Page](docs/upload.png)
+![Dashboard](docs/dashboard.png)
+![Report Page](docs/report.png)
+
+
 ## 🗺️ Architecture Overview
 
 The system is composed of:
@@ -85,9 +88,9 @@ The system is composed of:
 - **Blazor WebAssembly** frontend for UI.
 - **Azure Functions** backend APIs (Upload, Get, Update, Delete).
 - **OCR Service** (Azure Cognitive Services) for non‑JSON uploads.
-- **ML.NET** for automated categorization.
+- **ML.NET** for category prediction only.
 - **Azure OpenAI** for generating explanations.
-- **Cosmos DB** for scalable storage, partitioned by category.
+- **Cosmos DB** for scalable storage, partitioned by userid.
 - **Dashboard** for human‑in‑the‑loop correction and reporting.
 
 ![Architecture](docs/Architecture.png)
@@ -95,7 +98,7 @@ The system is composed of:
 
 ## 🗺️ Roadmap
 - Add charts for category totals and monthly trends.
-- Multi-user authentication with Azure AD B2C.
+- ~~Multi-user authentication with Azure AD B2C.~~
 - Export reports to CSV/Excel.
 - Enhanced error handling with toast notifications.
 

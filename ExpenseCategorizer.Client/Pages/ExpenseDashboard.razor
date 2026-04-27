@@ -28,12 +28,18 @@ else
         <tbody>
             @foreach (var expense in expenses)
             {
-                <tr>
+                <tr class="@((expense.Amount == 0) ? "highlight-row" : "")">
                     <td>@expense.Description</td>
                     <td>@expense.Category</td>
                     <td>@expense.Explanation</td>
                     <td>@expense.Date.ToString("dd-MMM-yyyy")</td>
-                    <td>@expense.Amount</td>
+                            <td>
+                                @expense.Amount
+                                @if (expense.Amount == 0)
+                                {
+                                    <span class="badge bg-warning text-dark ms-2">Needs Correction</span>
+                                }
+                            </td>
                     <td>
                         <button class="btn btn-sm btn-primary" @onclick="() => StartEdit(expense)">Edit</button>
                         <button class="btn btn-sm btn-danger" @onclick="() => DeleteExpense(expense.Id, expense.Category)">Delete</button>
