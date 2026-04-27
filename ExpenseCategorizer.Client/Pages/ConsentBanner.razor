@@ -1,0 +1,19 @@
+﻿@* ConsentBanner.razor *@
+@if (showBanner)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <strong>Privacy Notice:</strong> By uploading receipts or expenses, you consent to this data being stored
+        until you delete it from your dashboard. No data is shared with third parties.
+        <a href="/privacy" class="alert-link"> Learn more</a>.
+        <button type="button" class="btn-close" @onclick="CloseBanner" aria-label="Close"></button>
+    </div>
+}
+
+@code {
+    private bool showBanner = true;
+
+    private void CloseBanner()
+    {
+        showBanner = false;
+    }
+}

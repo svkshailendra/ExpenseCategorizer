@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+﻿@using ExpenseCategorizer.Pages
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inherits LayoutComponentBase
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
@@ -20,9 +21,12 @@
                 </NotAuthorized>
             </AuthorizeView>
 
-            <a href="/about">About</a>
+            <nav class="nav">
+                <a class="nav-link" href="/about">About</a>
+                <a class="nav-link" href="/privacy">Privacy</a>
+            </nav>
         </div>
-
+        <ConsentBanner />
         <article class="content px-4">
             @Body
         </article>
