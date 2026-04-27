@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ExpenseCategorizer
 {
@@ -52,6 +54,14 @@ namespace ExpenseCategorizer
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
+            // Force safe JSON options globally
+            builder.Services.AddSingleton(new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
 
             // Add MSAL authentication
             builder.Services.AddMsalAuthentication(options =>

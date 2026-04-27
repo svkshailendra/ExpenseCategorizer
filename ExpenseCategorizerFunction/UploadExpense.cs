@@ -85,7 +85,7 @@ public class UploadExpense
         {
             using var reader = new StreamReader(file.Data);
             var json = await reader.ReadToEndAsync();
-            var expenses = System.Text.Json.JsonSerializer.Deserialize<List<Expense>>(json) ?? new List<Expense>();
+            var expenses = System.Text.Json.JsonSerializer.Deserialize<List<Expense>>(json, JsonHelper.SafeOptions) ?? new List<Expense>();
 
             foreach (var expense in expenses)
             {
