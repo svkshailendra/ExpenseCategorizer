@@ -1,0 +1,211 @@
+﻿@page "/faq"
+
+<h3>Frequently Asked Questions</h3>
+
+<p class="text-muted">
+    This app supports two types of uploads:
+    <strong>JSON uploads</strong> for developers who want to provide structured data with categories,
+    and <strong>receipt uploads</strong> (images, PDFs) for end‑users who rely on OCR and machine learning
+    to automatically categorize expenses. The FAQ below explains how each path works.
+</p>
+
+<div class="accordion" id="faqAccordion">
+    <!-- JSON Uploads -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingJson">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseJson" aria-expanded="false" aria-controls="collapseJson">
+                Do JSON uploads require a category?
+            </button>
+        </h2>
+        <div id="collapseJson" class="accordion-collapse collapse" aria-labelledby="headingJson"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Yes. JSON uploads must include a <code>category</code> field. If it’s missing, the upload fails.
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Uploads -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingReceipts">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseReceipts" aria-expanded="false" aria-controls="collapseReceipts">
+                How are handwritten receipts handled?
+            </button>
+        </h2>
+        <div id="collapseReceipts" class="accordion-collapse collapse" aria-labelledby="headingReceipts"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Handwritten receipts, PDFs, or images don’t require categories. The app uses OCR + ML.NET
+                to predict categories automatically.
+            </div>
+        </div>
+    </div>
+
+    <!-- Uploading Receipts -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                How do I upload receipts?
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                You can upload handwritten receipts, PDFs, images, or JSON files directly from the dashboard.
+                OCR extracts text and ML.NET predicts categories automatically.
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample Files -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingSamples">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseSamples" aria-expanded="false" aria-controls="collapseSamples">
+                Can I use sample files to test?
+            </button>
+        </h2>
+        <div id="collapseSamples" class="accordion-collapse collapse" aria-labelledby="headingSamples"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Yes. A dedicated <a href="/samples">Samples page</a> provides example receipts, JSON files,
+                and invoices you can download and upload here. These examples are optional and meant to
+                demonstrate supported formats — you can also upload your own files.
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Complex vs Simple PDFs -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingComplex">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseComplex" aria-expanded="false" aria-controls="collapseComplex">
+                Why do complex business invoices parse differently than simple receipts?
+            </button>
+        </h2>
+        <div id="collapseComplex" class="accordion-collapse collapse" aria-labelledby="headingComplex"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Simple handwritten or straightforward receipts (e.g., a list of items and amounts) parse cleanly
+                with OCR and categorization. Complex business‑style invoices, such as corporate tax invoices,
+                often include tables, subtotals, discounts, taxes, and metadata. OCR flattens these structures
+                into text, which can cause extra words to be captured and flagged for correction.
+                <br /><br />
+                This tool is optimized for handwritten receipts and everyday expenses. Complex invoices are not
+                the primary focus, and may require manual correction if uploaded.
+            </div>
+        </div>
+    </div>
+
+    <!-- Flagged Rows -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingFlagged">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseFlagged" aria-expanded="false" aria-controls="collapseFlagged">
+                What does it mean when an expense is flagged for correction?
+            </button>
+        </h2>
+        <div id="collapseFlagged" class="accordion-collapse collapse" aria-labelledby="headingFlagged"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                When OCR or parsing cannot confidently extract an amount or description, the entry is flagged.
+                For example, rows with <code>Amount = 0</code> or uncertain text are highlighted in the dashboard.
+                This ensures data integrity by prompting you to review and correct those entries before reports
+                are generated. The correction loop is part of the app’s design to balance automation with
+                human oversight.
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Safety -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Is my data safe?
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Yes. Data is processed only within this application and trusted Microsoft Azure services
+                (OCR, PDF generation, secure database). No data is shared with unauthorized third parties.
+            </div>
+        </div>
+    </div>
+
+    <!-- Categorization -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Can I change the categories?
+            </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                No. Categories are automatically assigned by the app and are read‑only for non-JSON uploads.
+                This ensures consistency and demonstrates the tool’s ability to categorize handwritten receipts
+                without manual intervention.
+                For JSON uploads, however, you can specify any category you need directly in the file —
+                giving developers full control over structured data.
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingFour">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                How do I generate reports?
+            </button>
+        </h2>
+        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Reports can be generated from the Reports page. They can be previewed and downloaded
+                as PDFs using integrated PDFSharp.
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Deletion -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingFive">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                Can I delete my data?
+            </button>
+        </h2>
+        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Yes. You can delete individual entries from the dashboard or clear all data.
+                Deleted entries are permanently removed from the system.
+            </div>
+        </div>
+    </div>
+
+    <!-- Cost -->
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingSix">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                Is this app free to use?
+            </button>
+        </h2>
+        <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix"
+             data-bs-parent="#faqAccordion">
+            <div class="accordion-body">
+                Yes. This tool is free to use and is designed to showcase Blazor, Azure Functions and
+                OCR.
+            </div>
+        </div>
+    </div>
+</div>
