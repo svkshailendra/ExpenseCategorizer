@@ -32,7 +32,7 @@ namespace ExpenseCategorizer
                 options.ProviderOptions.Authentication.ClientId =
                     "a81c2799-74ae-4849-a497-3032d71b34b1";
 
-                options.ProviderOptions.Authentication.PostLogoutRedirectUri = "https://purple-water-04d7b3300.7.azurestaticapps.net/authentication/logout-callback";
+                options.ProviderOptions.Authentication.PostLogoutRedirectUri = "https://purple-water-04d7b3300.7.azurestaticapps.net/";
                 // Request the API scope you exposed
                 options.ProviderOptions.DefaultAccessTokenScopes.Add("abac5165-ffcf-46dd-9659-98fce7cbc6d8/user_impersonation");
             });
