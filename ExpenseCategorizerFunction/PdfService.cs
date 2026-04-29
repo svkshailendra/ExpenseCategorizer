@@ -20,7 +20,7 @@ namespace ExpenseCategorizerFunction
             title.Format.Alignment = ParagraphAlignment.Center;
 
             // Total Expenses
-            var total = section.AddParagraph($"Total Expenses: {report.TotalExpenses:C}");
+            var total = section.AddParagraph($"Total Expenses: {report.TotalExpenses:N2}");
             total.Format.Font.Size = 14;
             total.Format.Font.Bold = true;
             total.Format.SpaceAfter = "1cm";
@@ -41,7 +41,7 @@ namespace ExpenseCategorizerFunction
             {
                 var row = table.AddRow();
                 row.Cells[0].AddParagraph(item.Name);
-                row.Cells[1].AddParagraph(item.Amount.ToString("C"));
+                row.Cells[1].AddParagraph(item.Amount.ToString("N2"));
             }
 
             // Footer
