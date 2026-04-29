@@ -1,8 +1,9 @@
 # ExpenseCategorizer
  
 
-A demo-ready portfolio project built with **Blazor WebAssembly**, **Azure Functions**, **Cosmos DB**, **ML.NET**, and **Azure OpenAI**.  
-It showcases dual-mode expense uploads, automated categorization, and human-in-the-loop correction.
+A demo-ready portfolio project built with **Blazor WebAssembly**, **Azure Functions**, **Cosmos DB**, **ML.NET**, and **OpenAI API** (explanations with a fallback to ML.NET rule‑based text when quota is exhausted).  
+It showcases dual-mode expense uploads, automated categorization, and human-in-the-loop correction.<br>
+[Live Site](https://purple-water-04d7b3300.7.azurestaticapps.net/)
 
 ---
 
@@ -14,7 +15,7 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
 
 - **Automated Categorization**
   - ML.NET predicts expense categories (Food, Travel, Utilities, Entertainment, etc.).
-  - Azure OpenAI generates human-readable explanations for each categorization.
+  - Explanations are generated via OpenAI API when quota is available; the app falls back to deterministic ML.NET-based explanations if the API is unavailable.
   - Amounts are parsed with rule‑based heuristics (regex + cleaning). ML is used only for category prediction. 
 
 - **Human-in-the-Loop Correction**
@@ -43,8 +44,8 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
 
 - **Frontend**: Blazor WebAssembly
 - **Backend**: Azure Functions
-- **Database**: Cosmos DB (partitioned by category)
-- **AI Services**: ML.NET (categorization), Azure OpenAI (explanations)
+- **Database**: Cosmos DB (partitioned by userid)
+- **AI Services**: ML.NET (categorization), OpenAI API (explanations with fallback)
 - **OCR**: Azure Cognitive Services
 
 ---
@@ -58,12 +59,6 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
 
 ---
 
-## ⚡ Getting Started
-
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/svkshailendra/ExpenseCategorizer.git
-	
 ## ⚙️ Setup
 1. Install .NET 8 SDK and Azure Functions Core Tools.
 2. Clone the repo:
@@ -73,6 +68,30 @@ It showcases dual-mode expense uploads, automated categorization, and human-in-t
    dotnet run --project ExpenseCategorizer.Client
 5. Run the Functions backend:
    func start
+
+## Configuration
+
+Set these keys in `local.settings.json` for local development and in Azure App Settings for production:
+
+* **`OPENAI_API_KEY`**: Your OpenAI API key.
+* **`COSMOS_CONNECTION_STRING`**: Connection string for your Cosmos DB instance.
+* **`COMPUTER_VISION_ENDPOINT`** & **`COMPUTER_VISION_KEY`**: Credentials for Azure OCR services.
+* **`LLM_PROVIDER`**: *(Optional)* Set to `"openai"` or `"azure"`. Defaults to `"openai"`.
+
+### Example `local.settings.json`
+```json
+{
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "OPENAI_API_KEY": "sk-...",
+    "COSMOS_CONNECTION_STRING": "...",
+    "COMPUTER_VISION_ENDPOINT": "...",
+    "COMPUTER_VISION_KEY": "...",
+    "LLM_PROVIDER": "openai"
+  }
+}
+```
+
 
 ## 📸 Screenshots
 ![Home Page](docs/Home.png)  
@@ -89,16 +108,22 @@ The system is composed of:
 - **Azure Functions** backend APIs (Upload, Get, Update, Delete).
 - **OCR Service** (Azure Cognitive Services) for non‑JSON uploads.
 - **ML.NET** for category prediction only.
-- **Azure OpenAI** for generating explanations.
+- **OpenAI API** for generating explanations (with fallback when quota is exhausted).
 - **Cosmos DB** for scalable storage, partitioned by userid.
 - **Dashboard** for human‑in‑the‑loop correction and reporting.
 
 ![Architecture](docs/Architecture.png)
 
-
+This project integrates the OpenAI API for natural language explanations. When free quota is exhausted, the system gracefully falls back to deterministic ML.NET-based explanations. In production this can be swapped to Azure OpenAI or another provider for enterprise compliance; provider selection is configurable.
 ## 🗺️ Roadmap
 - Add charts for category totals and monthly trends.
 - ~~Multi-user authentication with Azure AD B2C.~~
 - Export reports to CSV/Excel.
 - Enhanced error handling with toast notifications.
 
+## 🔗 Links
+
+- 🔗 <a href="https://purple-water-04d7b3300.7.azurestaticapps.net/" target="_blank" rel="noopener noreferrer">Live Site</a>
+- 👤 <a href="https://www.linkedin.com/in/shailendrasvk/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+- ▶️ <a href="https://youtube.com/your-demo-link" target="_blank" rel="noopener noreferrer">Demo Video (coming soon)</a>
+- ✉️ <a href="mailto:svkshailendra@gmail.com">Contact</a>
