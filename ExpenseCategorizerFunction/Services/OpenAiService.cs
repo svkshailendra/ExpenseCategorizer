@@ -1,50 +1,54 @@
-﻿using Azure;
-using OpenAI;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using OpenAI.Chat;
 using static ExpenseCategorizerFunction.Services.IExpenseServices;
 
 namespace ExpenseCategorizerFunction.Services
 {
     public class OpenAiService : IOpenAiService
     {
+        private readonly ChatClient _chatClient;
         private readonly IMlNetService _mlNetService;
+        private readonly ILogger<OpenAiService> _logger;
 
-        public OpenAiService(IMlNetService mlNetService)
+        public OpenAiService(IMlNetService mlNetService, IConfiguration configuration, ILogger<OpenAiService> logger)
         {
+            var apiKey = configuration["OPENAI_API_KEY"] ?? System.Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                throw new ArgumentNullException(nameof(apiKey), "OpenAI API Key is missing. Check your local.settings.json or Azure App Settings.");
+            }
+            _chatClient = new ChatClient(model: "gpt-4o-mini", apiKey: apiKey);
             _mlNetService = mlNetService;
+            _logger = logger;
         }
-        public Task<string> GenerateExplanationAsync(string text)
+        public async Task<string> GenerateExplanationAsync(string text)
         {
-            // Very simple rule-based explanation
-            string explanation;
-
             var category = _mlNetService.PredictCategory(text);
-            explanation = $"This expense was categorized as {category} based on the description: {text}.";
-            return Task.FromResult(explanation);
 
-            //if (text.Contains("coffee", StringComparison.OrdinalIgnoreCase) ||
-            //    text.Contains("pizza", StringComparison.OrdinalIgnoreCase) ||
-            //    text.Contains("restaurant", StringComparison.OrdinalIgnoreCase))
-            //{
-            //    explanation = $"This expense looks like food or dining based on the text: {text}.";
-            //}
-            //else if (text.Contains("uber", StringComparison.OrdinalIgnoreCase) ||
-            //         text.Contains("taxi", StringComparison.OrdinalIgnoreCase) ||
-            //         text.Contains("flight", StringComparison.OrdinalIgnoreCase))
-            //{
-            //    explanation = $"This expense appears to be travel related, inferred from: {text}.";
-            //}
-            //else if (text.Contains("bill", StringComparison.OrdinalIgnoreCase) ||
-            //         text.Contains("electricity", StringComparison.OrdinalIgnoreCase) ||
-            //         text.Contains("internet", StringComparison.OrdinalIgnoreCase))
-            //{
-            //    explanation = $"This expense is likely a utility payment, based on: {text}.";
-            //}
-            //else
-            //{
-            //    explanation = $"This expense could not be clearly categorized, but the text was: {text}.";
-            //}
+            try
+            {
+                List<ChatMessage> messages = new()
+            {
+                new SystemChatMessage("You explain expense categories."),
+                new UserChatMessage($"The ML model predicted '{category}' for this expense: {text}. Write a short explanation why.")
+            };
 
-            //return Task.FromResult(explanation);
+                // Call CompleteChatAsync directly from the chat client
+                ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
+
+                var result = completion.Content[0].Text;
+                _logger.LogInformation($"OpenAI explanation generated: {result}");
+
+                // Access content via the Content property
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ OpenAI call failed: {ex.Message}");
+                // Fallback if credits are exhausted or API fails
+                return $"This expense was categorized as {category} based on the description: {text}.";
+            }
         }
     }
 
