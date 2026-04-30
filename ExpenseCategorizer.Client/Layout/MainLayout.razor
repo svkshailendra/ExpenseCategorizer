@@ -39,13 +39,19 @@
 </div>
 
 @code {
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        // 1. Log the very first homepage visit
-        await AppInsights.TrackPageView();
-
-        // 2. Listen for any internal page changes
+        // 1. Listen for internal page changes
         Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // 2. Log the very first homepage visit ONLY after JS is ready
+            await AppInsights.TrackPageView();
+        }
     }
 
     private async void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
@@ -62,7 +68,7 @@
         Navigation.NavigateTo("authentication/logout");
     }
 
-    // 3. Clean up the event listener when the layout is destroyed
+    //  Clean up the event listener when the layout is destroyed
     public void Dispose()
     {
         Navigation.LocationChanged -= OnLocationChanged;
