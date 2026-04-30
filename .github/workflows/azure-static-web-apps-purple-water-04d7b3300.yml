@@ -32,6 +32,13 @@ jobs:
                const coredemo = require('@actions/core')
                return await coredemo.getIDToken()
            result-encoding: string
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Clean NuGet cache
+        run: dotnet nuget locals all --clear
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
