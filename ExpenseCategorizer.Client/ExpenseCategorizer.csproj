@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-
+	
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -9,6 +9,7 @@
     <Configurations>Debug;Release;MixedPlatforms</Configurations>
 	<NullabilityInfoContextSupport>true</NullabilityInfoContextSupport>
 	<PublishTrimmed>false</PublishTrimmed>
+	  <Authors>Shailendra</Authors>
   </PropertyGroup>
 
   <ItemGroup>
