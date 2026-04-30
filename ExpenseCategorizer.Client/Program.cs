@@ -23,22 +23,15 @@ namespace ExpenseCategorizer
             });
 
             //Register App Insights
-            var connString = builder.Configuration["AppInsightsConnectionString"];
-
-            // Check if we actually found a string from GitHub/Settings
-            if (!string.IsNullOrEmpty(connString))
+            builder.Services.AddBlazorApplicationInsights(config =>
             {
-                // If it exists, register it with the string
-                builder.Services.AddBlazorApplicationInsights(config =>
+                var connString = builder.Configuration["AppInsightsConnectionString"];
+
+                if (!string.IsNullOrEmpty(connString))
                 {
                     config.ConnectionString = connString;
-                });
-            }
-            else
-            {
-                // If it's missing or null, register a blank one so MainLayout doesn't crash
-                builder.Services.AddBlazorApplicationInsights();
-            }
+                }
+            });
 
             // Add MSAL authentication
             builder.Services.AddMsalAuthentication(options =>
