@@ -12,6 +12,7 @@ namespace ExpenseCategorizer
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
             // Force safe JSON options globally
@@ -32,7 +33,6 @@ namespace ExpenseCategorizer
                 }
             });
 
-            
             builder.Services.AddScoped<ApplicationInsights>();
 
             // Add MSAL authentication
