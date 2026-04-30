@@ -125,5 +125,5 @@ This project integrates the OpenAI API for natural language explanations. When f
 
 - 🔗 <a href="https://purple-water-04d7b3300.7.azurestaticapps.net/" target="_blank" rel="noopener noreferrer">Live Site</a>
 - 👤 <a href="https://www.linkedin.com/in/shailendrasvk/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-- [▶️ Demo Video (Download)](docs/ExpenseCategorizer.mp4)
+- ▶️ <a href="docs/ExpenseCategorizer.mp4" download>Demo Video (Download)</a>
 - ✉️ <a href="mailto:svkshailendra@gmail.com">Contact</a>
