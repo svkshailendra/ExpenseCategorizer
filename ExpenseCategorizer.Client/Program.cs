@@ -26,12 +26,14 @@ namespace ExpenseCategorizer
             builder.Services.AddBlazorApplicationInsights(config =>
             {
                 var connString = builder.Configuration["AppInsightsConnectionString"];
-
                 if (!string.IsNullOrEmpty(connString))
                 {
                     config.ConnectionString = connString;
                 }
             });
+
+            
+            builder.Services.AddScoped<ApplicationInsights>();
 
             // Add MSAL authentication
             builder.Services.AddMsalAuthentication(options =>
