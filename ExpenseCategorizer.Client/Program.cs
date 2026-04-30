@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using BlazorApplicationInsights;
 
 namespace ExpenseCategorizer
 {
@@ -21,6 +22,11 @@ namespace ExpenseCategorizer
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
 
+            //Register App Insights
+            builder.Services.AddBlazorApplicationInsights(config =>
+            {
+                config.ConnectionString = builder.Configuration["AppInsightsConnectionString"];
+            });
 
             // Add MSAL authentication
             builder.Services.AddMsalAuthentication(options =>

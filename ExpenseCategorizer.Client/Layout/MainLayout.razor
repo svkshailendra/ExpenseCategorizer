@@ -1,8 +1,12 @@
 ﻿@using ExpenseCategorizer.Pages
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using BlazorApplicationInsights
 @inherits LayoutComponentBase
+@implements IDisposable
 @inject NavigationManager Navigation
 @inject SignOutSessionStateManager SignOutManager
+@inject ApplicationInsights AppInsights
+
 
 <div class="page">
     <div class="sidebar">
@@ -35,10 +39,32 @@
 </div>
 
 @code {
+    protected override async Task OnInitializedAsync()
+    {
+        // 1. Log the very first homepage visit
+        await AppInsights.TrackPageView();
+
+        // 2. Listen for any internal page changes
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private async void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        // Log a hit every time the URL changes
+        await AppInsights.TrackPageView();
+        StateHasChanged();
+    }
+
     private async Task Logout()
     {
         await SignOutManager.SetSignOutState();
         // Navigate through Blazor/MSAL pipeline so logout is recognized as "in-page"
         Navigation.NavigateTo("authentication/logout");
+    }
+
+    // 3. Clean up the event listener when the layout is destroyed
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
     }
 }
