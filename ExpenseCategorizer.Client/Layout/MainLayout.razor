@@ -49,8 +49,6 @@
     {
         if (firstRender)
         {
-            await Task.Delay(3000);
-            // 2. Log the very first homepage visit ONLY after JS is ready
             try
             {
                 if (AppInsights != null)
@@ -68,7 +66,10 @@
     private async void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
     {
         // Log a hit every time the URL changes
-        await AppInsights.TrackPageView();
+        if (AppInsights != null)
+        {
+            await AppInsights.TrackPageView();
+        }
         StateHasChanged();
     }
 
