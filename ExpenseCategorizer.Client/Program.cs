@@ -34,8 +34,6 @@ namespace ExpenseCategorizer
             });
             Console.WriteLine($"AppInsightsConnectionString: {builder.Configuration["AppInsightsConnectionString"]}");
 
-            builder.Services.AddScoped<ApplicationInsights>();
-
             // Add MSAL authentication
             builder.Services.AddMsalAuthentication(options =>
             {
