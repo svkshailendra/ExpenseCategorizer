@@ -49,8 +49,19 @@
     {
         if (firstRender)
         {
+            await Task.Delay(3000);
             // 2. Log the very first homepage visit ONLY after JS is ready
-            await AppInsights.TrackPageView();
+            try
+            {
+                if (AppInsights != null)
+                {
+                    await AppInsights.TrackPageView();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"AppInsights initialization failed: {ex.Message}");
+            }             
         }
     }
 

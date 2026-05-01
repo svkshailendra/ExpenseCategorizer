@@ -29,9 +29,10 @@ namespace ExpenseCategorizer
                 var connString = builder.Configuration["AppInsightsConnectionString"];
                 if (!string.IsNullOrEmpty(connString))
                 {
-                    config.ConnectionString = connString;
+                    config.ConnectionString = connString; 
                 }
             });
+            Console.WriteLine($"AppInsightsConnectionString: {builder.Configuration["AppInsightsConnectionString"]}");
 
             builder.Services.AddScoped<ApplicationInsights>();
 

@@ -9,7 +9,6 @@
     <Configurations>Debug;Release;MixedPlatforms</Configurations>
 	<NullabilityInfoContextSupport>true</NullabilityInfoContextSupport>
 	<PublishTrimmed>false</PublishTrimmed>
-	  <Authors>Shailendra</Authors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,7 +30,7 @@
     <ProjectReference Include="..\ExpenseCategorizer.Shared\ExpenseCategorizer.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup>	 
     <Content Update="wwwroot\appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -46,7 +45,7 @@
     </Content>
     <Content Update="wwwroot\images\upload.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Content>	 
     <Content Update="wwwroot\sample-data\expenses.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
