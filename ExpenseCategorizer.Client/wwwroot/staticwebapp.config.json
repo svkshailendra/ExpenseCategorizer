@@ -1,0 +1,5 @@
+{
+  "globalHeaders": {
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' https://js.monitor.azure.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.applicationinsights.azure.com"
+  }
+}
