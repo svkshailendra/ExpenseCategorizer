@@ -45,24 +45,6 @@
         Navigation.LocationChanged += OnLocationChanged;
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            try
-            {
-                if (AppInsights != null)
-                {
-                    await AppInsights.TrackPageView();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"AppInsights initialization failed: {ex.Message}");
-            }             
-        }
-    }
-
     private async void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
     {
         // Log a hit every time the URL changes
