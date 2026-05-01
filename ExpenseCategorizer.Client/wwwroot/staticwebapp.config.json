@@ -1,5 +1,5 @@
 {
   "globalHeaders": {
-    "Content-Security-Policy": "default-src 'self'; script-src 'self' https://js.monitor.azure.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.applicationinsights.azure.com"
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' https://js.monitor.azure.com 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.applicationinsights.azure.com https://login.microsoftonline.com https://expensefunctiondemo-h4afcqhnfqbceqht.australiaeast-01.azurewebsites.net"
   }
 }
