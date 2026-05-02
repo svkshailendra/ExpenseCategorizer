@@ -39,7 +39,28 @@
     <!-- Bootstrap JS bundle (must be before Blazor scripts) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Application Insights base SDK -->
-    <script src="https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        !function (v, y, T) {
+            var S = v.location, k = "script", D = y.createElement(k), m = y.getElementsByTagName(k),
+                n = "https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js";
+            D.src = n;
+
+            // Expanded placeholders to catch all early Blazor calls
+            v[T] = v[T] || {
+                config: {},
+                queue: [],
+                onInit: function (e) { v[T].config = e; },
+                updateCfg: function (c, m) { this.config = c; },
+                trackPageView: function (p) { this.queue.push({ name: 'trackPageView', args: arguments }); },
+                trackEvent: function (e) { this.queue.push({ name: 'trackEvent', args: arguments }); },
+                setAuthenticatedUserContext: function (u) { this.queue.push({ name: 'setAuthenticatedUserContext', args: arguments }); },
+                clearAuthenticatedUserContext: function () { this.queue.push({ name: 'clearAuthenticatedUserContext', args: arguments }); }
+            };
+
+            m[0].parentNode.insertBefore(D, m[0]);
+        }(window, document, "appInsights");
+    </script>
+    <!--<script src="https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js" crossorigin="anonymous"></script>-->
     <script src="_content/BlazorApplicationInsights/BlazorApplicationInsights.lib.module.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/Microsoft.Authentication.WebAssembly.Msal/AuthenticationService.js"></script>
