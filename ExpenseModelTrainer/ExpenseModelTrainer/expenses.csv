@@ -9,6 +9,26 @@ Lunch at McDonalds,Food
 KFC Chicken Bucket,Food
 Breakfast at IHOP,Food
 Snacks from 7-Eleven,Food
+Chipotle Burrito Bowl,Food
+Panera Bread Lunch,Food
+Whole Foods Grocery,Food
+Costco Bulk Groceries,Food
+Cheesecake Factory Dinner,Food
+Pizza Hut Delivery,Food
+Taco Bell Combo,Food
+Fresh Market Produce,Food
+Dunkin Donuts Coffee,Food
+Safeway Grocery Shopping,Food
+Five Guys Burger,Food
+Trader Joe’s Groceries,Food
+Buffet at Golden Corral,Food
+Starbucks Latte,Food
+Street Food Vendor,Food
+Cafe Nero Coffee,Food
+Publix Grocery Run,Food
+Shake Shack Meal,Food
+Food Truck Lunch,Food
+7-Eleven Sandwich,Food
 
 Uber Ride,Travel
 Taxi Fare,Travel
@@ -20,6 +40,26 @@ Metro Card Recharge,Travel
 Cab to Airport,Travel
 Car Rental Payment,Travel
 Toll Charges,Travel
+Airbnb Booking,Travel
+Hotel Stay Payment,Travel
+Fuel at Gas Station,Travel
+Parking Garage Fee,Travel
+Highway Toll Payment,Travel
+Flight to New York,Travel
+Train to Boston,Travel
+Scooter Rental,Travel
+Suburban Bus Ticket,Travel
+Airport Shuttle,Travel
+Cruise Booking,Travel
+Flight to Paris,Travel
+Taxi to Hospital,Travel
+Car Wash Payment,Travel
+Ride Share to Office,Travel
+Train Pass Monthly,Travel
+Flight to Tokyo,Travel
+Bus Fare to Downtown,Travel
+Cab to Railway Station,Travel
+Rental Bike Payment,Travel
 
 Electricity Bill,Utilities
 Internet Bill,Utilities
@@ -31,6 +71,26 @@ Garbage Collection Fee,Utilities
 Home Heating Bill,Utilities
 Landline Phone Bill,Utilities
 Solar Panel Maintenance,Utilities
+Wi-Fi Router Rental,Utilities
+Sewage Bill,Utilities
+Electricity Recharge,Utilities
+Smart Home Service Fee,Utilities
+Broadband Internet Payment,Utilities
+Gas Cylinder Purchase,Utilities
+Mobile Data Pack,Utilities
+Electricity Meter Reading Fee,Utilities
+Water Purification Service,Utilities
+Satellite TV Subscription,Utilities
+Electricity Connection Fee,Utilities
+Internet Installation Charge,Utilities
+Utility Service Tax,Utilities
+Smart Meter Maintenance,Utilities
+Gas Pipeline Service,Utilities
+Water Tank Cleaning,Utilities
+Mobile SIM Recharge,Utilities
+Electricity Late Fee,Utilities
+Cable Box Rental,Utilities
+Utility Deposit Payment,Utilities
 
 Movie Ticket,Entertainment
 Netflix Subscription,Entertainment
@@ -42,6 +102,26 @@ Video Game Purchase,Entertainment
 Disney+ Subscription,Entertainment
 Theatre Play Ticket,Entertainment
 YouTube Premium,Entertainment
+Hulu Subscription,Entertainment
+Board Game Purchase,Entertainment
+Cinema Snacks,Entertainment
+Apple Music Subscription,Entertainment
+Kindle eBook Purchase,Entertainment
+Gaming Console Payment,Entertainment
+IMAX Movie Ticket,Entertainment
+Magazine Subscription,Entertainment
+Audible Membership,Entertainment
+Arcade Game Tokens,Entertainment
+Online Course Payment,Entertainment
+Live Sports Event Ticket,Entertainment
+Movie Rental Fee,Entertainment
+Streaming Service Bundle,Entertainment
+Comic Book Purchase,Entertainment
+VR Game Purchase,Entertainment
+Music Album Download,Entertainment
+Film Festival Ticket,Entertainment
+Online Gaming Subscription,Entertainment
+Dance Show Ticket,Entertainment
 
 Gym Membership,Health
 Doctor Consultation Fee,Health
@@ -53,3 +133,23 @@ Health Insurance Premium,Health
 Physiotherapy Session,Health
 Protein Supplements,Health
 Vaccination Fee,Health
+Massage Therapy,Health
+Blood Test Fee,Health
+Running Shoes,Health
+Fitness Equipment Purchase,Health
+Chiropractor Visit,Health
+Mental Health Counseling,Health
+Dietitian Consultation,Health
+Sports Medicine Fee,Health
+Medical Lab Test,Health
+Hospital Admission Fee,Health
+Ayurvedic Treatment,Health
+Homeopathy Medicine,Health
+Gym Personal Trainer,Health
+Health Screening Package,Health
+Nutrition Supplements,Health
+Medical Imaging Scan,Health
+Acupuncture Session,Health
+Emergency Room Fee,Health
+Fitness Class Subscription,Health
+Wellness Retreat Payment,Health

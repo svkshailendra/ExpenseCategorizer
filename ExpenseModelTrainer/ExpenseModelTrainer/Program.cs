@@ -49,15 +49,56 @@ class Program
 
         // Evaluate
         var predictions = model.Transform(split.TestSet);
-        var metrics = mlContext.MulticlassClassification.Evaluate(predictions);
-        Console.WriteLine($"MacroAccuracy: {metrics.MacroAccuracy}");
+        var metrics = mlContext.MulticlassClassification.Evaluate(predictions); 
 
+
+        //metrics
+        Console.WriteLine($"MicroAccuracy: {metrics.MicroAccuracy}");
+        Console.WriteLine($"MacroAccuracy: {metrics.MacroAccuracy}");
+        Console.WriteLine($"LogLoss: {metrics.LogLoss}");
+        Console.WriteLine($"LogLossReduction: {metrics.LogLossReduction}");
 
         //Save model
 
-       mlContext.Model.Save(model, data.Schema, "expenseModel.zip");
-       Console.WriteLine("Model saved to expenseModel.zip");
+        string modelPath = Path.Combine(AppContext.BaseDirectory, "expenseModel.zip");
+        mlContext.Model.Save(model, data.Schema, modelPath);        
+        Console.WriteLine($"Model saved to: {modelPath}");
 
 
+        // Confusion Matrix
+        Console.WriteLine("Confusion Matrix:");
+        var cm = metrics.ConfusionMatrix;
+        for (int i = 0; i < cm.NumberOfClasses; i++)
+        {
+            for (int j = 0; j < cm.NumberOfClasses; j++)
+            {
+                Console.Write($"{cm.Counts[i][j]} ");
+            }
+            Console.WriteLine();
+        }
+
+        /// Calculate per-class precision, recall, F1
+        Console.WriteLine("Per-Class Metrics:");
+        for (int i = 0; i < cm.NumberOfClasses; i++)
+        {
+            double truePositives = cm.Counts[i][i];
+            double falseNegatives = cm.Counts[i].Sum() - truePositives;
+            double falsePositives = 0;
+
+            for (int j = 0; j < cm.NumberOfClasses; j++)
+            {
+                if (j != i)
+                    falsePositives += cm.Counts[j][i];
+            }
+
+            double precision = truePositives / (truePositives + falsePositives);
+            double recall = truePositives / (truePositives + falseNegatives);
+            double f1 = 2 * (precision * recall) / (precision + recall);
+
+            Console.WriteLine($"Class {i}:");
+            Console.WriteLine($"  Precision: {precision:F2}");
+            Console.WriteLine($"  Recall: {recall:F2}");
+            Console.WriteLine($"  F1 Score: {f1:F2}");
+        }
     }
 }
